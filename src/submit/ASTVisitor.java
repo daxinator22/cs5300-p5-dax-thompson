@@ -6,6 +6,7 @@ import parser.CminusBaseVisitor;
 import parser.CminusParser;
 import submit.ast.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,7 +28,11 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 
     private VarType getFunType(CminusParser.TypeSpecifierContext ctx) {
         final String t = ctx.getText();
-        return (t.equals("int")) ? VarType.INT : (t.equals("bool")) ? VarType.BOOL : VarType.CHAR;
+
+        if(t.equals("void")){
+            return null;
+        }
+        return getVarType(ctx);
     }
 
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
@@ -122,7 +127,13 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitFunDeclaration(CminusParser.FunDeclarationContext ctx) {
         symbolTable.addSymbol(ctx.ID().toString(), new SymbolInfo(ctx.ID().toString(), this.getFunType(ctx.typeSpecifier()), true));
 
-        return visitChildren(ctx);
+        //Finds the parameters
+        ArrayList<VarDeclaration> params = new ArrayList<>();
+        for(CminusParser.ParamContext c : ctx.param()){
+            params.add((VarDeclaration) visitParam(c));
+        }
+
+        return new FunDeclaration(getFunType(ctx.typeSpecifier()), ctx.ID().toString(), params);
     }
     /**
      * {@inheritDoc}
@@ -131,13 +142,21 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitTypeSpecifier(CminusParser.TypeSpecifierContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitParam(CminusParser.ParamContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitParam(CminusParser.ParamContext ctx) {
+
+        ArrayList<String> ids = new ArrayList<>();
+        ArrayList<Integer> size = new ArrayList<>();
+
+        ids.add(ctx.paramId().toString());
+        size.add(0);
+        return new VarDeclaration(getVarType(ctx.typeSpecifier()), ids, size, false);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *

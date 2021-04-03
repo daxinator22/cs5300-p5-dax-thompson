@@ -65,8 +65,8 @@ public class Main {
         LOGGER.info("");
         StringBuilder builder = new StringBuilder();
         try {
-            LOGGER.fine(v.getSymbolTable().toString());
-//            ast.toCminus(builder, "");
+//            LOGGER.fine(v.getSymbolTable().toString());
+            ast.toCminus(builder, "");
         } finally {
             LOGGER.info(builder.toString());
         }

@@ -4,19 +4,35 @@ import java.util.List;
 
 public class FunDeclaration implements Declaration, Node {
 
-    private FunType type;
+    private VarType type;
     private String id;
     private List<VarDeclaration> params;
-    private Statement stmt;
+//    private Statement stmt;
 
-    public FunDeclaration(FunType type, String id, List<VarDeclaration> params, Statement stmt){
+    public FunDeclaration(VarType type, String id, List<VarDeclaration> params){
         this.type = type;
         this.id = id;
         this.params = params;
-        this.stmt = stmt;
+//        this.stmt = stmt;
     }
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
+        builder.append(prefix);
+
+        if(type == null){
+            builder.append("void ");
+        }
+        else{
+            builder.append(type.toString());
+        }
+
+        builder.append(String.format(" %s(", this.id));     //Appends type and id
+
+        for(VarDeclaration v : this.params){
+            v.toCminus(builder, "");
+        }
+
+        builder.append(")\n{\n}\n");
 
     }
 }
