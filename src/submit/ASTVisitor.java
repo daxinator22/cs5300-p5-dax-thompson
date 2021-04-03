@@ -128,9 +128,10 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
         symbolTable.addSymbol(ctx.ID().toString(), new SymbolInfo(ctx.ID().toString(), this.getFunType(ctx.typeSpecifier()), true));
 
         //Finds the parameters
-        ArrayList<VarDeclaration> params = new ArrayList<>();
-        for(CminusParser.ParamContext c : ctx.param()){
-            params.add((VarDeclaration) visitParam(c));
+        ArrayList<Param> params = new ArrayList<>();
+        List<CminusParser.ParamContext> parent = ctx.param();
+        for(CminusParser.ParamContext c : parent){
+            params.add((Param) visitParam(c));
         }
 
         return new FunDeclaration(getFunType(ctx.typeSpecifier()), ctx.ID().toString(), params);
@@ -150,12 +151,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitParam(CminusParser.ParamContext ctx) {
 
-        ArrayList<String> ids = new ArrayList<>();
-        ArrayList<Integer> size = new ArrayList<>();
-
-        ids.add(ctx.paramId().toString());
-        size.add(0);
-        return new VarDeclaration(getVarType(ctx.typeSpecifier()), ids, size, false);
+        return new Param(getVarType(ctx.typeSpecifier()), ctx.paramId().ID().toString(), null);
     }
 //    /**
 //     * {@inheritDoc}

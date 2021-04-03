@@ -6,10 +6,10 @@ public class FunDeclaration implements Declaration, Node {
 
     private VarType type;
     private String id;
-    private List<VarDeclaration> params;
+    private List<Param> params;
 //    private Statement stmt;
 
-    public FunDeclaration(VarType type, String id, List<VarDeclaration> params){
+    public FunDeclaration(VarType type, String id, List<Param> params){
         this.type = type;
         this.id = id;
         this.params = params;
@@ -28,8 +28,8 @@ public class FunDeclaration implements Declaration, Node {
 
         builder.append(String.format(" %s(", this.id));     //Appends type and id
 
-        for(VarDeclaration v : this.params){
-            v.toCminus(builder, "");
+        for(Param p : this.params){
+            p.toCminus(builder, "");
         }
 
         builder.append(")\n{\n}\n");
