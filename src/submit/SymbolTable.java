@@ -56,6 +56,19 @@ public class SymbolTable {
     return child;
   }
 
+  public String toString(){
+    StringBuilder s = new StringBuilder();
+
+    s.append("SYMBOL TABLE\n");
+    s.append("____________________\n");
+
+    for(String key : table.keySet()){
+      s.append(String.format("%s\n", table.get(key).toString()));
+    }
+
+    return s.toString();
+  }
+
   public SymbolTable getParent() {
     return parent;
   }
