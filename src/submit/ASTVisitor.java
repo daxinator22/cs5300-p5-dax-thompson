@@ -44,6 +44,8 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             decls.add((Declaration) visitDeclaration(d));
 //            System.out.println(d.getText());
         }
+
+        LOGGER.info(String.format("PARENT %s", symbolTable.toString()));
         return new Program(decls);
     }
 
@@ -127,13 +129,20 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitFunDeclaration(CminusParser.FunDeclarationContext ctx) {
         symbolTable.addSymbol(ctx.ID().toString(), new SymbolInfo(ctx.ID().toString(), this.getFunType(ctx.typeSpecifier()), true));
+        SymbolTable funTable = symbolTable.createChild();
 
         //Finds the parameters
         ArrayList<Param> params = new ArrayList<>();
         List<CminusParser.ParamContext> parent = ctx.param();
         for(CminusParser.ParamContext c : parent){
-            params.add((Param) visitParam(c));
+            Param param = (Param) visitParam(c);
+            params.add(param);
+
+            //Creates new symbol table entry
+            funTable.addSymbol(param.getId(), (new SymbolInfo(param.getId(), param.getType(), false)));
         }
+
+        LOGGER.info(String.format("NEW %s", funTable.toString()));
 
         return new FunDeclaration(getFunType(ctx.typeSpecifier()), ctx.ID().toString(), params);
     }

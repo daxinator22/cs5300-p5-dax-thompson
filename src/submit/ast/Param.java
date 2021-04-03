@@ -12,6 +12,14 @@ public class Param implements Declaration, Node{
         this.size = size;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public VarType getType() {
+        return type;
+    }
+
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
         builder.append(prefix);
