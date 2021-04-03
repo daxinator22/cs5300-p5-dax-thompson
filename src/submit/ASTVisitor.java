@@ -23,6 +23,11 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
         return (t.equals("int")) ? VarType.INT : (t.equals("bool")) ? VarType.BOOL : VarType.CHAR;
     }
 
+    private VarType getFunType(CminusParser.TypeSpecifierContext ctx) {
+        final String t = ctx.getText();
+        return (t.equals("int")) ? VarType.INT : (t.equals("bool")) ? VarType.BOOL : VarType.CHAR;
+    }
+
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
         symbolTable = new SymbolTable();
         List<Declaration> decls = new ArrayList<>();
@@ -96,7 +101,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
         if(ctx.getText().contains("(")){
             return visitFunDeclaration(ctx.funDeclaration());
         }
-        LOGGER.fine(ctx.varDeclaration().toString());
+//        LOGGER.fine(ctx.varDeclaration().toString());
         return visitVarDeclaration(ctx.varDeclaration());
     }
 //    /**
@@ -106,13 +111,17 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitVarDeclId(CminusParser.VarDeclIdContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitFunDeclaration(CminusParser.FunDeclarationContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitFunDeclaration(CminusParser.FunDeclarationContext ctx) {
+        symbolTable.addSymbol(ctx.ID(), ctx.typeSpecifier(), true);
+
+        return visitChildren(ctx);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
