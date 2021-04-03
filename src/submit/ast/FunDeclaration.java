@@ -18,6 +18,7 @@ public class FunDeclaration implements Declaration, Node {
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
         builder.append(prefix);
+        builder.append("\n");
 
         if(type == null){
             builder.append("void ");
@@ -28,8 +29,18 @@ public class FunDeclaration implements Declaration, Node {
 
         builder.append(String.format(" %s(", this.id));     //Appends type and id
 
-        for(Param p : this.params){
-            p.toCminus(builder, "");
+        try {
+            //Gets and removes first param
+            Param first = params.get(0);
+            first.toCminus(builder, "");
+            params.remove(0);
+
+            for (Param p : this.params) {
+                builder.append(", ");
+                p.toCminus(builder, "");
+            }
+        } catch(IndexOutOfBoundsException e){
+
         }
 
         builder.append(")\n{\n}\n");

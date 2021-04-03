@@ -2,6 +2,7 @@ package submit;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import parser.CminusBaseVisitor;
 import parser.CminusParser;
 import submit.ast.*;
@@ -38,10 +39,10 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
         symbolTable = new SymbolTable();
         List<Declaration> decls = new ArrayList<>();
-//        decls.add((Declaration) visitDeclaration(ctx.declaration(0)));
+//        decls.add((Declaration) visitDeclaration(ctx.declaration(ctx.declaration().size() - 1)));
         for (CminusParser.DeclarationContext d : ctx.declaration()) {
             decls.add((Declaration) visitDeclaration(d));
-            System.out.println(d.getText());
+//            System.out.println(d.getText());
         }
         return new Program(decls);
     }
@@ -150,8 +151,17 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitParam(CminusParser.ParamContext ctx) {
+        Integer size = null;
 
-        return new Param(getVarType(ctx.typeSpecifier()), ctx.paramId().ID().toString(), null);
+        //Determines the size of the array
+        if (ctx.children.get(1).getChildCount() == 2){
+            TerminalNodeImpl array = (TerminalNodeImpl) ctx.children.get(1).getChild(1);
+            if(array.getText().equals("[]")){
+                size = 0;
+            }
+        }
+
+        return new Param(getVarType(ctx.typeSpecifier()), ctx.paramId().ID().toString(), size);
     }
 //    /**
 //     * {@inheritDoc}
