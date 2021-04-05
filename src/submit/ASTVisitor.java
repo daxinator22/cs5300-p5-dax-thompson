@@ -108,7 +108,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitDeclaration(CminusParser.DeclarationContext ctx) {
-        if(ctx.getText().contains("(")){
+        if(ctx.getChild(0) instanceof CminusParser.FunDeclarationContext){
             return visitFunDeclaration(ctx.funDeclaration());
         }
 //        LOGGER.fine(ctx.varDeclaration().toString());
@@ -142,9 +142,12 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             funTable.addSymbol(param.getId(), (new SymbolInfo(param.getId(), param.getType(), false)));
         }
 
+        //Processing statements
+        Statement statement = (Statement) visitStatement(ctx.statement());
+
         LOGGER.info(String.format("NEW %s", funTable.toString()));
 
-        return new FunDeclaration(getFunType(ctx.typeSpecifier()), ctx.ID().toString(), params);
+        return new FunDeclaration(getFunType(ctx.typeSpecifier()), ctx.ID().toString(), params, statement);
     }
     /**
      * {@inheritDoc}
@@ -179,20 +182,39 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitParamId(CminusParser.ParamIdContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitStatement(CminusParser.StatementContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitCompoundStmt(CminusParser.CompoundStmtContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitStatement(CminusParser.StatementContext ctx) {
+        ParseTree s = ctx.children.get(0);
+        if(s instanceof CminusParser.CompoundStmtContext){
+            return visitCompoundStmt((CminusParser.CompoundStmtContext)s);
+        }
+
+
+        return visitChildren(ctx);
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitCompoundStmt(CminusParser.CompoundStmtContext ctx) {
+
+        for(ParseTree t : ctx.children){
+            if(t instanceof CminusParser.VarDeclarationContext){
+                return visitVarDeclaration((CminusParser.VarDeclarationContext) t);
+            }
+            else if(t instanceof CminusParser.StatementContext){
+                return visitStatement((CminusParser.StatementContext) t);
+            }
+        }
+        return visitChildren(ctx);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *

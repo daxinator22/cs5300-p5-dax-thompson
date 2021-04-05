@@ -7,13 +7,13 @@ public class FunDeclaration implements Declaration, Node {
     private VarType type;
     private String id;
     private List<Param> params;
-//    private Statement stmt;
+    private Statement stmt;
 
-    public FunDeclaration(VarType type, String id, List<Param> params){
+    public FunDeclaration(VarType type, String id, List<Param> params, Statement stmt){
         this.type = type;
         this.id = id;
         this.params = params;
-//        this.stmt = stmt;
+        this.stmt = stmt;
     }
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
@@ -39,11 +39,11 @@ public class FunDeclaration implements Declaration, Node {
                 builder.append(", ");
                 p.toCminus(builder, "");
             }
-        } catch(IndexOutOfBoundsException e){
+        } catch(IndexOutOfBoundsException e){}
 
-        }
-
-        builder.append(")\n{\n}\n");
+        builder.append(")\n{\n");
+        builder.append(String.format("\t%s", stmt.toString()));
+        builder.append("}\n");
 
     }
 }
