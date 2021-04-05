@@ -7,6 +7,7 @@ import parser.CminusBaseVisitor;
 import parser.CminusParser;
 import submit.ast.*;
 
+import java.awt.image.CropImageFilter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,11 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
         symbolTable = new SymbolTable();
         List<Declaration> decls = new ArrayList<>();
-//        decls.add((Declaration) visitDeclaration(ctx.declaration(ctx.declaration().size() - 1)));
-        for (CminusParser.DeclarationContext d : ctx.declaration()) {
-            decls.add((Declaration) visitDeclaration(d));
+        decls.add((Declaration) visitDeclaration(ctx.declaration(ctx.declaration().size() - 1)));
+//        for (CminusParser.DeclarationContext d : ctx.declaration()) {
+//            decls.add((Declaration) visitDeclaration(d));
 //            System.out.println(d.getText());
-        }
+//        }
 
         LOGGER.info(String.format("PARENT %s", symbolTable.toString()));
         return new Program(decls);
@@ -264,22 +265,36 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitExpression(CminusParser.ExpressionContext ctx) {
-        return visitChildren(ctx);
+        if(ctx == null)
+            return null;
+
+        ParseTree first = ctx.getChild(0);
+        if(first instanceof CminusParser.MutableContext){
+            return new Expression((Mutable) visitMutable(ctx.mutable()), ctx.getChild(1).getText(),(Expression) visitExpression(ctx.expression()));
+        }
+
+        return new Expression(null, null, (Expression) visitSimpleExpression(ctx.simpleExpression()));
     }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitSimpleExpression(CminusParser.SimpleExpressionContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitOrExpression(CminusParser.OrExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitSimpleExpression(CminusParser.SimpleExpressionContext ctx) {
+        return visitOrExpression(ctx.orExpression());
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitOrExpression(CminusParser.OrExpressionContext ctx) {
+        ArrayList<AndExpression> andExpressions = new ArrayList<>();
+
+        for()
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
