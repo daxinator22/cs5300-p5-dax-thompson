@@ -194,6 +194,10 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             return visitCompoundStmt((CminusParser.CompoundStmtContext)s);
         }
 
+        else if(s instanceof CminusParser.ExpressionStmtContext){
+            return visitExpressionStmt((CminusParser.ExpressionStmtContext) s);
+        }
+
 
         return visitChildren(ctx);
     }
@@ -212,19 +216,26 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             if(t instanceof CminusParser.VarDeclarationContext){
                 vars.add((VarDeclaration) visitVarDeclaration((CminusParser.VarDeclarationContext) t));
             }
-//            else if(t instanceof CminusParser.StatementContext){
-//                return visitStatement((CminusParser.StatementContext) t);
-//            }
+            else if(t instanceof CminusParser.StatementContext){
+                return visitStatement((CminusParser.StatementContext) t);
+            }
         }
         return new CompoundStatment(vars, statements);
     }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitExpressionStmt(CminusParser.ExpressionStmtContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitExpressionStmt(CminusParser.ExpressionStmtContext ctx) {
+        ParseTree e = ctx.getChild(0);
+        if(e instanceof CminusParser.ExpressionContext){
+            return new ExpressionStatement((Expression) visitExpression((CminusParser.ExpressionContext) e));
+        }
+
+        return new ExpressionStatement(null);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
@@ -246,13 +257,13 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitBreakStmt(CminusParser.BreakStmtContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitExpression(CminusParser.ExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitExpression(CminusParser.ExpressionContext ctx) { return visitChildren(ctx); }
 //    /**
 //     * {@inheritDoc}
 //     *
