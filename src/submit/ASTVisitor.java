@@ -205,15 +205,18 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitCompoundStmt(CminusParser.CompoundStmtContext ctx) {
 
+        ArrayList<VarDeclaration> vars = new ArrayList<>();
+        ArrayList<Statement> statements = new ArrayList<>();
+
         for(ParseTree t : ctx.children){
             if(t instanceof CminusParser.VarDeclarationContext){
-                return visitVarDeclaration((CminusParser.VarDeclarationContext) t);
+                vars.add((VarDeclaration) visitVarDeclaration((CminusParser.VarDeclarationContext) t));
             }
-            else if(t instanceof CminusParser.StatementContext){
-                return visitStatement((CminusParser.StatementContext) t);
-            }
+//            else if(t instanceof CminusParser.StatementContext){
+//                return visitStatement((CminusParser.StatementContext) t);
+//            }
         }
-        return visitChildren(ctx);
+        return new CompoundStatment(vars, statements);
     }
 //    /**
 //     * {@inheritDoc}

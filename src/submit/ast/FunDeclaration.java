@@ -41,9 +41,8 @@ public class FunDeclaration implements Declaration, Node {
             }
         } catch(IndexOutOfBoundsException e){}
 
-        builder.append(")\n{\n");
-        builder.append(String.format("\t%s", stmt.toString()));
-        builder.append("}\n");
+        builder.append(")\n");
+        stmt.toCminus(builder, "  ");
 
     }
 }
