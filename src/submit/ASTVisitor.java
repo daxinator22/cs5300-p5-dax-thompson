@@ -263,7 +263,9 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public Node visitExpression(CminusParser.ExpressionContext ctx) { return visitChildren(ctx); }
+    @Override public Node visitExpression(CminusParser.ExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *

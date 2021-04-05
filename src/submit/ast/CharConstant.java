@@ -8,7 +8,7 @@ package submit.ast;
  *
  * @author edwajohn
  */
-public class CharConstant implements Expression {
+public class CharConstant implements Node {
 
   private final char value;
 
