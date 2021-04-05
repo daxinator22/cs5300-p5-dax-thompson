@@ -16,15 +16,21 @@ public class Expression implements Node{
     public void toCminus(StringBuilder builder, String prefix) {
         builder.append(prefix);
 
-        //Appending mutable and operator
-        this.mutable.toCminus(builder, prefix);
-        builder.append(String.format(" %s ", this.operator));
+        if(mutable == null && operator == null){
 
-        //Appends expression
-        if(this.expr != null){
+            //In this case, there is only a SimpleExpression
+            this.expr.toCminus(builder, prefix);
+        }
+        else {
+            //Appending mutable and operator
+            this.mutable.toCminus(builder, prefix);
 
-            //If there is a mutable, then there is no need for a prefix
-            this.mutable.toCminus(builder, "");
+            //Appends expression
+            if(this.expr != null){
+
+                //If there is a mutable, then there is no need for a prefix
+                this.expr.toCminus(builder, "");
+            }
         }
     }
 }
