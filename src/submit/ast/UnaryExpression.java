@@ -14,7 +14,7 @@ public class UnaryExpression extends Expression{
 
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
-//        builder.append(prefix);
+        builder.append(prefix);
 
         for(String op : this.ops){
             builder.append(op);

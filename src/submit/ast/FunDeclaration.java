@@ -42,7 +42,7 @@ public class FunDeclaration implements Declaration, Node {
         } catch(IndexOutOfBoundsException e){}
 
         builder.append(")\n");
-        stmt.toCminus(builder, "  ");
 
+        stmt.toCminus(builder, prefix);
     }
 }

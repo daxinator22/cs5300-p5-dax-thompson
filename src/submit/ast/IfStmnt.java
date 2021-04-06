@@ -20,15 +20,15 @@ public class IfStmnt implements Statement {
 
         //Adds expression
         simpleExpr.toCminus(builder, "");
-        builder.append(")");
+        builder.append(")\n");
 
         //Adds true statement
-        trueStmt.toCminus(builder, "  ");
+        trueStmt.toCminus(builder, prefix);
 
         //Adds false statement
         if(falseStmt != null){
             builder.append(String.format("%selse", prefix));
-            falseStmt.toCminus(builder, "");
+            falseStmt.toCminus(builder, prefix);
         }
 
     }

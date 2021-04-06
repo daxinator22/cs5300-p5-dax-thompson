@@ -22,7 +22,7 @@ public class Call implements Node{
         //Adds expressions as parameters
         try{
             Expression first = exprs.get(0);
-            first.toCminus(builder, prefix);
+            first.toCminus(builder, "");
             exprs.remove(0);
 
         }catch (IndexOutOfBoundsException e){

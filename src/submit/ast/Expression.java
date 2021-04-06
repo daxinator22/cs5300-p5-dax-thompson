@@ -23,11 +23,11 @@ public class Expression implements Node{
         if(mutable == null && operator == null){
 
             //In this case, there is only a SimpleExpression
-            this.expr.toCminus(builder, prefix);
+            this.expr.toCminus(builder, "");
         }
         else {
             //Appending mutable and operator
-            this.mutable.toCminus(builder, prefix);
+            this.mutable.toCminus(builder, "");
             builder.append(String.format(" %s", this.operator));
 
             //Appends expression

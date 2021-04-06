@@ -19,6 +19,7 @@ public class UnaryRelExpression extends Expression{
         //Appends bangs
         while(this.bangs > 0){
             builder.append("!");
+            this.bangs--;
         }
 
         this.relExpr.toCminus(builder, prefix);

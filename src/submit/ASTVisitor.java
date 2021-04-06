@@ -40,11 +40,12 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
         symbolTable = new SymbolTable();
         List<Declaration> decls = new ArrayList<>();
-        decls.add((Declaration) visitDeclaration(ctx.declaration(2)));
-//        for (CminusParser.DeclarationContext d : ctx.declaration()) {
-//            decls.add((Declaration) visitDeclaration(d));
+//        decls.add((Declaration) visitDeclaration(ctx.declaration(ctx.declaration().size() - 1)));
+        for (CminusParser.DeclarationContext d : ctx.declaration()) {
+            decls.add((Declaration) visitDeclaration(d));
 //            System.out.println(d.getText());
-//        }
+        }
+//        decls.remove(decls.size() - 1);
 
         LOGGER.info(String.format("PARENT %s", symbolTable.toString()));
         return new Program(decls);
@@ -53,7 +54,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitVarDeclaration(CminusParser.VarDeclarationContext ctx) {
         for (CminusParser.VarDeclIdContext v : ctx.varDeclId()) {
             String id = v.ID().getText();
-            LOGGER.fine("Var ID: " + id);
+//            LOGGER.fine("Var ID: " + id);
         }
 //        return null;
 
@@ -75,7 +76,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
         StringBuilder test = new StringBuilder();
         var.toCminus(test, "");
 
-        LOGGER.fine(String.format("New varDeclaration: %s", test.toString()));
+//        LOGGER.fine(String.format("New varDeclaration: %s", test.toString()));
 
         return var;
     }
@@ -252,6 +253,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitIfStmt(CminusParser.IfStmtContext ctx) {
 
+//        return visitChildren(ctx);
         return new IfStmnt((Expression) visitSimpleExpression(ctx.simpleExpression()), (Statement) visitStatement(ctx.statement(0)), (Statement) visitStatement(ctx.statement(1)));
     }
 //    /**
@@ -350,6 +352,10 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 
         for(CminusParser.SumExpressionContext e : ctx.sumExpression()){
             sums.add((SumExpression) visitSumExpression(e));
+        }
+
+        for(CminusParser.RelopContext r : ctx.relop()){
+            ops.add(r.getText());
         }
 
         return new RelExpression(sums, ops);
@@ -479,7 +485,19 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             part = visitCall(ctx.call());
         }
         else{
-            part = visitConstant(ctx.constant());
+            CminusParser.ConstantContext constant = ctx.constant();
+            if(constant.CHARCONST() != null){
+                return new CharConstant(constant.getText().charAt(0));
+            }
+            else if(constant.NUMCONST() != null){
+                return new NumConstant(Integer.parseInt(constant.getText()));
+            }
+            else if(constant.STRINGCONST() != null){
+                return new StringConstant(constant.getText());
+            }
+            else{
+                return new BoolConstant(Boolean.parseBoolean(constant.getText()));
+            }
         }
 
         return new Immutable(part);

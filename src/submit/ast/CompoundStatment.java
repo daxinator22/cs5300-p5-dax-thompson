@@ -16,16 +16,17 @@ public class CompoundStatment implements Statement{
 
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
-        builder.append("{\n");
+
+        builder.append(String.format("%s{\n", prefix));
 
         for(VarDeclaration v: this.vars){
-            v.toCminus(builder, prefix);
+            v.toCminus(builder, prefix + "  ");
         }
 
         for(Statement s : statements){
-            s.toCminus(builder, prefix);
+            s.toCminus(builder, prefix + "  ");
         }
 
-        builder.append("}\n");
+        builder.append(String.format("%s}\n", prefix));
     }
 }

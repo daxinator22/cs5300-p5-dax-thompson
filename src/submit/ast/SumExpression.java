@@ -14,7 +14,7 @@ public class SumExpression extends Expression{
 
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
-//        builder.append(prefix);
+        builder.append(prefix);
 
         for(int i = 0; i < termExpr.size(); i++){
             termExpr.get(i).toCminus(builder, "");
