@@ -23,12 +23,22 @@ public class IfStmnt implements Statement {
         builder.append(")\n");
 
         //Adds true statement
-        trueStmt.toCminus(builder, prefix);
+        if(trueStmt instanceof CompoundStatment) {
+            trueStmt.toCminus(builder, prefix);
+        }
+        else{
+            trueStmt.toCminus(builder, prefix + " ");
+        }
 
         //Adds false statement
         if(falseStmt != null){
-            builder.append(String.format("%selse", prefix));
-            falseStmt.toCminus(builder, prefix);
+            builder.append(String.format("%selse\n", prefix));
+            if(falseStmt instanceof CompoundStatment) {
+                falseStmt.toCminus(builder, prefix);
+            }
+            else{
+                falseStmt.toCminus(builder, prefix + " ");
+            }
         }
 
     }

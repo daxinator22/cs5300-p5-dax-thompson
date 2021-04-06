@@ -21,7 +21,7 @@ public class FunDeclaration implements Declaration, Node {
         builder.append("\n");
 
         if(type == null){
-            builder.append("void ");
+            builder.append("void");
         }
         else{
             builder.append(type.toString());

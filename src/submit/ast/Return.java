@@ -23,7 +23,7 @@ public class Return implements Statement {
       builder.append("return;\n");
     } else {
       builder.append("return ");
-      expr.toCminus(builder, prefix);
+      expr.toCminus(builder, "");
       builder.append(";\n");
     }
   }

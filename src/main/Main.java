@@ -40,7 +40,7 @@ public class Main {
         LOGGER = Logger.getLogger(Parser.class.getName());
 
         // TODO Update the filename as needed
-        final String filename = "data/test0.c";
+        final String filename = "data/test1.c";
 
         LOGGER.info("");
         LOGGER.info("Parsing " + filename + "\n");
