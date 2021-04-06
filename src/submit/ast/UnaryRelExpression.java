@@ -5,9 +5,9 @@ import parser.CminusParser;
 public class UnaryRelExpression extends Expression{
 
     private int bangs;
-    private String relExpr;
+    private RelExpression relExpr;
 
-    public UnaryRelExpression(int bangs, String relExpr){
+    public UnaryRelExpression(int bangs, RelExpression relExpr){
         this.bangs = bangs;
         this.relExpr = relExpr;
     }
@@ -21,6 +21,6 @@ public class UnaryRelExpression extends Expression{
             builder.append("!");
         }
 
-        builder.append(this.relExpr);
+        this.relExpr.toCminus(builder, prefix);
     }
 }

@@ -40,7 +40,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitProgram(CminusParser.ProgramContext ctx) {
         symbolTable = new SymbolTable();
         List<Declaration> decls = new ArrayList<>();
-        decls.add((Declaration) visitDeclaration(ctx.declaration(ctx.declaration().size() - 1)));
+        decls.add((Declaration) visitDeclaration(ctx.declaration(2)));
 //        for (CminusParser.DeclarationContext d : ctx.declaration()) {
 //            decls.add((Declaration) visitDeclaration(d));
 //            System.out.println(d.getText());
@@ -190,6 +190,9 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitStatement(CminusParser.StatementContext ctx) {
+        if(ctx == null)
+            return null;
+
         ParseTree s = ctx.children.get(0);
         if(s instanceof CminusParser.CompoundStmtContext){
             return visitCompoundStmt((CminusParser.CompoundStmtContext)s);
@@ -197,6 +200,10 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 
         else if(s instanceof CminusParser.ExpressionStmtContext){
             return visitExpressionStmt((CminusParser.ExpressionStmtContext) s);
+        }
+
+        else if(s instanceof CminusParser.IfStmtContext){
+            return visitIfStmt(ctx.ifStmt());
         }
 
 
@@ -237,13 +244,16 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 
         return new ExpressionStatement(null);
     }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitIfStmt(CminusParser.IfStmtContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitIfStmt(CminusParser.IfStmtContext ctx) {
+
+        return new IfStmnt((Expression) visitSimpleExpression(ctx.simpleExpression()), (Statement) visitStatement(ctx.statement(0)), (Statement) visitStatement(ctx.statement(1)));
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
@@ -322,7 +332,27 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitUnaryRelExpression(CminusParser.UnaryRelExpressionContext ctx) {
 
-        return new UnaryRelExpression(ctx.BANG().size(), visitRelExpression(ctx.relExpression()).toString());
+        int bangs = ctx.BANG().size();
+        RelExpression rel = (RelExpression) visitRelExpression(ctx.relExpression());
+
+        return new UnaryRelExpression(bangs, rel);
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitRelExpression(CminusParser.RelExpressionContext ctx) {
+        ArrayList<SumExpression> sums = new ArrayList<>();
+        ArrayList<String> ops = new ArrayList<>();
+
+
+        for(CminusParser.SumExpressionContext e : ctx.sumExpression()){
+            sums.add((SumExpression) visitSumExpression(e));
+        }
+
+        return new RelExpression(sums, ops);
     }
 //    /**
 //     * {@inheritDoc}
@@ -330,21 +360,27 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * <p>The default implementation returns the result of calling
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
-//    @Override public T visitRelExpression(CminusParser.RelExpressionContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
 //    @Override public T visitRelop(CminusParser.RelopContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitSumExpression(CminusParser.SumExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitSumExpression(CminusParser.SumExpressionContext ctx) {
+        ArrayList<TermExpression> terms = new ArrayList<>();
+        ArrayList<String> ops = new ArrayList<>();
+
+        for(CminusParser.TermExpressionContext t : ctx.termExpression()){
+            terms.add((TermExpression) visitTermExpression(t));
+        }
+
+        for(CminusParser.SumopContext s : ctx.sumop()){
+            ops.add(s.getText());
+        }
+
+        return new SumExpression(terms, ops);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
@@ -352,13 +388,26 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitSumop(CminusParser.SumopContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitTermExpression(CminusParser.TermExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitTermExpression(CminusParser.TermExpressionContext ctx) {
+        ArrayList<String> unarys = new ArrayList<>();
+        ArrayList<String> ops = new ArrayList<>();
+
+        for(CminusParser.UnaryExpressionContext e : ctx.unaryExpression()){
+            unarys.add(e.toString());
+        }
+
+        for(CminusParser.MulopContext m : ctx.mulop()){
+            ops.add(m.getText());
+        }
+
+        return new TermExpression(unarys, ops);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
@@ -366,13 +415,15 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitMulop(CminusParser.MulopContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitUnaryExpression(CminusParser.UnaryExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitUnaryExpression(CminusParser.UnaryExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
 //    /**
 //     * {@inheritDoc}
 //     *

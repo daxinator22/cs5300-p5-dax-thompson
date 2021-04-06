@@ -22,7 +22,7 @@ public class AndExpression extends Expression{
 
         //Appends the rest of the AndExpressions
         for(UnaryRelExpression e : this.unarys){
-            builder.append(" || ");
+            builder.append(" && ");
             e.toCminus(builder, "");
 //            builder.append(e);
         }
