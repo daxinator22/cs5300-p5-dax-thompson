@@ -12,7 +12,7 @@ public class AndExpression extends Expression{
 
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
-        builder.append(prefix);
+//        builder.append(prefix);
 
         //Adds and removes the first and expression
         UnaryRelExpression first = this.unarys.get(0);

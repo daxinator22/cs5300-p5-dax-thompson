@@ -15,7 +15,7 @@ public class RelExpression extends Expression{
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
 
-        builder.append(prefix);
+//        builder.append(prefix);
 
         for(int i = 0; i < this.sums.size(); i++){
             SumExpression sum = this.sums.get(i);

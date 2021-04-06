@@ -4,10 +4,10 @@ import java.util.List;
 
 public class TermExpression extends Expression{
 
-    private List<String> unarys;
+    private List<UnaryExpression> unarys;
     private List<String> ops;
 
-    public TermExpression(List<String> unarys, List<String> ops){
+    public TermExpression(List<UnaryExpression> unarys, List<String> ops){
 
         this.unarys = unarys;
         this.ops = ops;
@@ -17,10 +17,10 @@ public class TermExpression extends Expression{
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
 
-        builder.append(prefix);
+//        builder.append(prefix);
 
         for(int i = 0; i < unarys.size(); i++){
-            builder.append(unarys.get(i));
+            unarys.get(i).toCminus(builder, "");
 
             try{
                 builder.append(String.format(" %s ", ops.get(i)));
