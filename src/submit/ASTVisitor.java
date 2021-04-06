@@ -218,7 +218,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
                 vars.add((VarDeclaration) visitVarDeclaration((CminusParser.VarDeclarationContext) t));
             }
             else if(t instanceof CminusParser.StatementContext){
-                return visitStatement((CminusParser.StatementContext) t);
+                statements.add((Statement) visitStatement((CminusParser.StatementContext) t));
             }
         }
         return new CompoundStatment(vars, statements);
@@ -293,22 +293,37 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
     @Override public Node visitOrExpression(CminusParser.OrExpressionContext ctx) {
         ArrayList<AndExpression> andExpressions = new ArrayList<>();
 
-        for()
+        for(CminusParser.AndExpressionContext and : ctx.andExpression()){
+            andExpressions.add((AndExpression) visitAndExpression(and));
+        }
+
+        return new OrExpression(andExpressions);
     }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitAndExpression(CminusParser.AndExpressionContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitUnaryRelExpression(CminusParser.UnaryRelExpressionContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitAndExpression(CminusParser.AndExpressionContext ctx) {
+        ArrayList<UnaryRelExpression> unarys = new ArrayList<>();
+
+        for(CminusParser.UnaryRelExpressionContext unary : ctx.unaryRelExpression()){
+            unarys.add((UnaryRelExpression) visitUnaryRelExpression(unary));
+        }
+
+        return new AndExpression(unarys);
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitUnaryRelExpression(CminusParser.UnaryRelExpressionContext ctx) {
+
+        return new UnaryRelExpression(ctx.BANG().size(), visitRelExpression(ctx.relExpression()).toString());
+    }
 //    /**
 //     * {@inheritDoc}
 //     *
@@ -372,13 +387,16 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
 //     * {@link #visitChildren} on {@code ctx}.</p>
 //     */
 //    @Override public T visitFactor(CminusParser.FactorContext ctx) { return visitChildren(ctx); }
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * <p>The default implementation returns the result of calling
-//     * {@link #visitChildren} on {@code ctx}.</p>
-//     */
-//    @Override public T visitMutable(CminusParser.MutableContext ctx) { return visitChildren(ctx); }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override public Node visitMutable(CminusParser.MutableContext ctx) {
+
+        return new Mutable(ctx.ID().toString(), (Expression) visitExpression(ctx.expression()));
+    }
 //    /**
 //     * {@inheritDoc}
 //     *

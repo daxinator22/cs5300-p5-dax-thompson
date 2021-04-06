@@ -6,6 +6,10 @@ public class Expression implements Node{
     private String operator;
     private Expression expr;
 
+    public Expression(){
+
+    }
+
      public Expression(Mutable mutable, String operator, Expression expr){
          this.mutable = mutable;
          this.operator = operator;
@@ -24,12 +28,13 @@ public class Expression implements Node{
         else {
             //Appending mutable and operator
             this.mutable.toCminus(builder, prefix);
+            builder.append(String.format(" %s", this.operator));
 
             //Appends expression
             if(this.expr != null){
 
                 //If there is a mutable, then there is no need for a prefix
-                this.expr.toCminus(builder, "");
+                this.expr.toCminus(builder, " ");
             }
         }
     }
