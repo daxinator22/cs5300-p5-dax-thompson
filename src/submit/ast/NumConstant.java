@@ -8,7 +8,7 @@ package submit.ast;
  *
  * @author edwajohn
  */
-public class NumConstant implements Node {
+public class NumConstant extends AbstractNode {
 
   private final int value;
 

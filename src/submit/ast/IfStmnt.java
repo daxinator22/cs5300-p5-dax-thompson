@@ -2,7 +2,7 @@ package submit.ast;
 
 import java.util.List;
 
-public class IfStmnt implements Statement {
+public class IfStmnt extends AbstractNode implements Statement {
 
     private Expression simpleExpr;
     private Statement trueStmt;

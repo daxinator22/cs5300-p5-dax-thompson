@@ -1,6 +1,6 @@
 package submit.ast;
 
-public class Param implements Declaration, Node{
+public class Param extends AbstractNode implements Declaration{
 
     private VarType type;
     private String id;

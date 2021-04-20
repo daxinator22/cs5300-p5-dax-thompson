@@ -1,6 +1,6 @@
 package submit.ast;
 
-public class While implements Statement{
+public class While extends AbstractNode implements Statement{
 
     private Expression simpleExpr;
     private Statement stmt;

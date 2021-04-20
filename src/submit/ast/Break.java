@@ -1,6 +1,6 @@
 package submit.ast;
 
-public class Break implements Statement{
+public class Break extends AbstractNode implements Statement{
 
     public Break(){
 

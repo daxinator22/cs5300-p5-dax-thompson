@@ -2,7 +2,7 @@ package submit.ast;
 
 import java.util.List;
 
-public class FunDeclaration implements Declaration, Node {
+public class FunDeclaration extends AbstractNode implements Declaration {
 
     private VarType type;
     private String id;

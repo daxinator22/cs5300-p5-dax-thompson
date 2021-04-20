@@ -1,6 +1,6 @@
 package submit.ast;
 
-public class Expression implements Node{
+public class Expression extends AbstractNode{
 
     private Mutable mutable;
     private String operator;

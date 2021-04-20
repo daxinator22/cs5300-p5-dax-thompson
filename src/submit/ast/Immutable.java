@@ -2,7 +2,7 @@ package submit.ast;
 
 import javax.swing.text.html.ImageView;
 
-public class Immutable implements Node{
+public class Immutable extends AbstractNode{
 
     private Node part;
 

@@ -4,7 +4,7 @@ import parser.CminusParser;
 
 import java.util.List;
 
-public class CompoundStatment implements Statement{
+public class CompoundStatment extends AbstractNode implements Statement{
 
     private List<VarDeclaration> vars;
     private List<Statement> statements;

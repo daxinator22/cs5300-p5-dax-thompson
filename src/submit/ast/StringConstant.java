@@ -8,7 +8,7 @@ package submit.ast;
  *
  * @author edwajohn
  */
-public class StringConstant implements Node {
+public class StringConstant extends AbstractNode {
 
   private final String value;
 

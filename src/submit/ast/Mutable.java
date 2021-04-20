@@ -8,7 +8,7 @@ package submit.ast;
  *
  * @author edwajohn
  */
-public class Mutable implements Node {
+public class Mutable extends AbstractNode {
 
   private final String id;
   private final Expression index;

@@ -2,7 +2,7 @@ package submit.ast;
 
 import java.util.List;
 
-public class Call implements Node{
+public class Call extends AbstractNode{
 
     private String id;
     private List<Expression> exprs;

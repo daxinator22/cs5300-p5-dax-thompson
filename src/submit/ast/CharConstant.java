@@ -8,7 +8,7 @@ package submit.ast;
  *
  * @author edwajohn
  */
-public class CharConstant implements Node {
+public class CharConstant extends AbstractNode {
 
   private final char value;
 

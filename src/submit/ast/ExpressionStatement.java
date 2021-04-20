@@ -1,6 +1,6 @@
 package submit.ast;
 
-public class ExpressionStatement implements Statement{
+public class ExpressionStatement extends AbstractNode implements Statement{
 
     private Expression expr;
 
