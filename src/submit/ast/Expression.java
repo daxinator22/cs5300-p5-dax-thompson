@@ -1,6 +1,10 @@
 package submit.ast;
 
-public class Expression extends AbstractNode{
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
+public class Expression implements Node{
 
     private Mutable mutable;
     private String operator;
@@ -37,5 +41,12 @@ public class Expression extends AbstractNode{
                 this.expr.toCminus(builder, " ");
             }
         }
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        expr.toMIPS(code, data, symbolTable, regAllocator);
+
+        return MIPSResult.createVoidResult();
     }
 }

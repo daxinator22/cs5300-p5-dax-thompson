@@ -1,8 +1,12 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import javax.swing.text.html.ImageView;
 
-public class Immutable extends AbstractNode{
+public class Immutable implements Node{
 
     private Node part;
 
@@ -22,5 +26,12 @@ public class Immutable extends AbstractNode{
         else{
             part.toCminus(builder, "");
         }
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        part.toMIPS(code, data, symbolTable, regAllocator);
+
+        return MIPSResult.createVoidResult();
     }
 }

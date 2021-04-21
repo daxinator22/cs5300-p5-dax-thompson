@@ -1,10 +1,13 @@
 package submit.ast;
 
 import parser.CminusParser;
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
 
 import java.util.List;
 
-public class CompoundStatment extends AbstractNode implements Statement{
+public class CompoundStatment implements Statement{
 
     private List<VarDeclaration> vars;
     private List<Statement> statements;
@@ -28,5 +31,14 @@ public class CompoundStatment extends AbstractNode implements Statement{
         }
 
         builder.append(String.format("%s}\n", prefix));
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        for(Node stmt : statements){
+            stmt.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        return MIPSResult.createVoidResult();
     }
 }

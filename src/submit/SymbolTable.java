@@ -21,6 +21,9 @@ public class SymbolTable {
     table = new HashMap<>();
     parent = null;
     children = new ArrayList<>();
+
+    //Adding println to symbol table
+    this.addSymbol("println", new SymbolInfo("println", null, true));
   }
 
   public void addSymbol(String id, SymbolInfo symbol) {

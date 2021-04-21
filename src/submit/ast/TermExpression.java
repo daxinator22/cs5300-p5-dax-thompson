@@ -1,5 +1,9 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
 public class TermExpression extends Expression{
@@ -29,5 +33,14 @@ public class TermExpression extends Expression{
             }
         }
 
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        for(Node unary : unarys){
+            unary.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        return MIPSResult.createVoidResult();
     }
 }

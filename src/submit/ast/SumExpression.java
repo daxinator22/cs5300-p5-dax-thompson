@@ -1,5 +1,9 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
 public class SumExpression extends Expression{
@@ -25,5 +29,14 @@ public class SumExpression extends Expression{
                 break;
             }
         }
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        for(Node term : termExpr){
+            term.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        return MIPSResult.createVoidResult();
     }
 }

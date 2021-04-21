@@ -1,8 +1,12 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
-public class FunDeclaration extends AbstractNode implements Declaration {
+public class FunDeclaration implements Declaration, Node {
 
     private VarType type;
     private String id;
@@ -44,5 +48,16 @@ public class FunDeclaration extends AbstractNode implements Declaration {
         builder.append(")\n");
 
         stmt.toCminus(builder, prefix);
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+
+        code.append(String.format("# Creating function call for %s\n", this.id));
+        code.append(String.format("%s:\n\n", this.id));
+
+        stmt.toMIPS(code, data, symbolTable, regAllocator);
+
+        return MIPSResult.createVoidResult();
     }
 }

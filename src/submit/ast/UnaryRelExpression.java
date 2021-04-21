@@ -1,6 +1,9 @@
 package submit.ast;
 
 import parser.CminusParser;
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
 
 public class UnaryRelExpression extends Expression{
 
@@ -23,5 +26,12 @@ public class UnaryRelExpression extends Expression{
         }
 
         this.relExpr.toCminus(builder, prefix);
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        relExpr.toMIPS(code, data, symbolTable, regAllocator);
+
+        return MIPSResult.createVoidResult();
     }
 }

@@ -1,6 +1,10 @@
 package submit.ast;
 
-public class ExpressionStatement extends AbstractNode implements Statement{
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
+public class ExpressionStatement implements Statement{
 
     private Expression expr;
 
@@ -16,4 +20,13 @@ public class ExpressionStatement extends AbstractNode implements Statement{
 
         builder.append(";\n");
     }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        expr.toMIPS(code, data, symbolTable, regAllocator);
+
+        return MIPSResult.createVoidResult();
+    }
+
+
 }

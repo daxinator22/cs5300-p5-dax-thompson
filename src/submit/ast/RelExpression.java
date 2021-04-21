@@ -1,5 +1,9 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
 public class RelExpression extends Expression{
@@ -31,5 +35,14 @@ public class RelExpression extends Expression{
             }
         }
 
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        for(Node sum : sums){
+            sum.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        return MIPSResult.createVoidResult();
     }
 }

@@ -1,5 +1,9 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
 public class OrExpression extends Expression{
@@ -24,5 +28,14 @@ public class OrExpression extends Expression{
             builder.append(" || ");
             e.toCminus(builder, "");
         }
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        for(Node and : ands){
+            and.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        return MIPSResult.createVoidResult();
     }
 }

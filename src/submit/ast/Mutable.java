@@ -4,11 +4,15 @@
  */
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 /**
  *
  * @author edwajohn
  */
-public class Mutable extends AbstractNode {
+public class Mutable implements Node {
 
   private final String id;
   private final Expression index;
@@ -26,6 +30,13 @@ public class Mutable extends AbstractNode {
       index.toCminus(builder, prefix);
       builder.append("]");
     }
+  }
+
+  @Override
+  public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+    String test = id;
+
+    return MIPSResult.createVoidResult();
   }
 
 }
