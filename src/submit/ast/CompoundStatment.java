@@ -11,10 +11,12 @@ public class CompoundStatment implements Statement{
 
     private List<VarDeclaration> vars;
     private List<Statement> statements;
+    private SymbolTable symbolTable;
 
-    public CompoundStatment(List<VarDeclaration> vars, List<Statement> statements){
+    public CompoundStatment(List<VarDeclaration> vars, List<Statement> statements, SymbolTable symbolTable){
         this.vars = vars;
         this.statements = statements;
+        this.symbolTable = symbolTable;
     }
 
     @Override
@@ -35,8 +37,10 @@ public class CompoundStatment implements Statement{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        code.append(String.format("# Symbol table is %s bytes\n", this.symbolTable.getSize()));
+
         for(Node stmt : statements){
-            stmt.toMIPS(code, data, symbolTable, regAllocator);
+            stmt.toMIPS(code, data, this.symbolTable, regAllocator);
         }
 
         return MIPSResult.createVoidResult();

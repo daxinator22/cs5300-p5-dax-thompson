@@ -16,11 +16,13 @@ public class SymbolTable {
   private final HashMap<String, SymbolInfo> table;
   private SymbolTable parent;
   private final List<SymbolTable> children;
+  private int size;
 
   public SymbolTable() {
     table = new HashMap<>();
     parent = null;
     children = new ArrayList<>();
+    this.size = 0;
 
     //Adding println to symbol table
     this.addSymbol("println", new SymbolInfo("println", null, true));
@@ -28,6 +30,8 @@ public class SymbolTable {
 
   public void addSymbol(String id, SymbolInfo symbol) {
     table.put(id, symbol);
+    this.size += 4;
+    symbol.setOffset(this.size);
   }
 
   /**
@@ -71,6 +75,8 @@ public class SymbolTable {
 
     return s.toString();
   }
+
+  public int getSize(){return size;}
 
   public SymbolTable getParent() {
     return parent;

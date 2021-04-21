@@ -6,6 +6,7 @@ package submit.ast;
 
 import submit.MIPSResult;
 import submit.RegisterAllocator;
+import submit.SymbolInfo;
 import submit.SymbolTable;
 
 /**
@@ -32,11 +33,17 @@ public class Mutable implements Node {
     }
   }
 
+  public String getId(){return this.id;}
+
   @Override
   public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-    String test = id;
+    String register = regAllocator.getT();
+    SymbolInfo symbol = symbolTable.find(this.id);
 
-    return MIPSResult.createVoidResult();
+    code.append(String.format("# Loading value of %s from stack at offset %s\n", this.id, symbol.getOffset()));
+    code.append(String.format("lw %s %s($sp)\n", register, symbol.getOffset()));
+
+    return MIPSResult.createRegisterResult(register, symbol.getType());
   }
 
 }

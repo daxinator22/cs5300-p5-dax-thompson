@@ -45,8 +45,27 @@ public class Expression implements Node{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        if(operator == null) {
+            return expr.toMIPS(code, data, symbolTable, regAllocator);
+        }
+
+        if(expr == null){
+
+        }
+        MIPSResult leftHand = mutable.toMIPS(code, data, symbolTable, regAllocator);
 
 
-        return expr.toMIPS(code, data, symbolTable, regAllocator);
+        //Get right hand value
+        MIPSResult rightHand = expr.toMIPS(code, data, symbolTable, regAllocator);
+
+        //Store right hand value to stack
+        int offset = symbolTable.find(mutable.getId()).getOffset();
+        code.append(String.format("# Saving new value of %s to stack\n", mutable.getId()));
+        if(operator.equals("=")) {
+            code.append(String.format("sw %s %s($sp)\n", rightHand.getRegister(), offset));
+        }
+        regAllocator.clearAll();
+
+        return leftHand;
     }
 }
