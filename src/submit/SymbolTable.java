@@ -30,7 +30,12 @@ public class SymbolTable {
 
   public void addSymbol(String id, SymbolInfo symbol) {
     table.put(id, symbol);
-    this.size += 4;
+
+    //Functions take up no size on the stack
+    if(!symbol.isFunction()) {
+      this.size += 4;
+    }
+
     symbol.setOffset(this.size);
   }
 

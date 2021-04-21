@@ -3,6 +3,7 @@ package submit.ast;
 import parser.CminusParser;
 import submit.MIPSResult;
 import submit.RegisterAllocator;
+import submit.SymbolInfo;
 import submit.SymbolTable;
 
 import java.util.List;
@@ -38,10 +39,15 @@ public class CompoundStatment implements Statement{
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
         code.append(String.format("# Symbol table is %s bytes\n", this.symbolTable.getSize()));
+        code.append(String.format("# Entering new scope, adjusting stack pointer %s bytes\n", symbolTable.getSize()));
+        code.append(String.format("addi $sp $sp -%s\n", symbolTable.getSize()));
 
         for(Node stmt : statements){
             stmt.toMIPS(code, data, this.symbolTable, regAllocator);
         }
+
+        code.append(String.format("# Leaving scope, adjusting stack pointer %s bytes\n", symbolTable.getSize()));
+        code.append(String.format("addi $sp $sp %s\n", symbolTable.getSize()));
 
         return MIPSResult.createVoidResult();
     }

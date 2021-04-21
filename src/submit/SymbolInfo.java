@@ -27,6 +27,7 @@ public class SymbolInfo {
   public void setOffset(int offset){ this.offset = offset;}
   public int getOffset() {return offset;}
   public VarType getType() {return type;}
+  public boolean isFunction(){return function;}
 
   @Override
   public String toString() {
