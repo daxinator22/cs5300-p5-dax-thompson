@@ -4,6 +4,7 @@ import submit.MIPSResult;
 import submit.RegisterAllocator;
 import submit.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SumExpression extends Expression{
@@ -33,11 +34,22 @@ public class SumExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        MIPSResult result = MIPSResult.createVoidResult();
+        ArrayList<MIPSResult> registers = new ArrayList<>();
 
         for(Node term : termExpr){
-            result = term.toMIPS(code, data, symbolTable, regAllocator);
+            registers.add(term.toMIPS(code, data, symbolTable, regAllocator));
         }
+
+        MIPSResult result = registers.get(0);
+        registers.remove(0);
+
+        for(String op : ops){
+            if(op.equals("+")) {
+                code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                registers.remove(0);
+            }
+        }
+
 
         return result;
     }
