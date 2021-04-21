@@ -49,12 +49,19 @@ public class Call implements Node{
             MIPSResult result = exprs.get(0).toMIPS(code, data, symbolTable, regAllocator);
 
             code.append(String.format("# Adding print statement\n"));
-            code.append("li $v0 4\n");
+
+            //Determines which syscall to use
+            int syscall = 4;
+            if(result.getType() == VarType.INT){
+                syscall = 1;
+            }
+            code.append(String.format("li $v0 %s\n", syscall));
 
             //Setting params for syscall
             if(result != null) {
                 if (result.getRegister() != null) {
-                    code.append(String.format("lw $a0 %s\n", result.getRegister()));
+
+                    code.append(String.format("move $a0 %s\n", result.getRegister()));
                 } else if (result.getAddress() != null) {
                     code.append(String.format("la $a0 %s\n", result.getAddress()));
                 }
