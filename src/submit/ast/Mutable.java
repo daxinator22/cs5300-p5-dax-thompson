@@ -38,10 +38,31 @@ public class Mutable implements Node {
   @Override
   public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
     String register = regAllocator.getT();
-    SymbolInfo symbol = symbolTable.find(this.id);
 
-    code.append(String.format("# Loading value of %s from stack at offset %s\n", this.id, symbol.getOffset()));
-    code.append(String.format("lw %s %s($sp)\n", register, symbol.getOffset()));
+    SymbolInfo symbol = null;
+    int offset = 0;
+    if(symbolTable.contains(this.id)) {
+      symbol = symbolTable.find(this.id);
+      offset = symbol.getOffset();
+    }
+
+    else{
+      SymbolTable parent = symbolTable.getParent();
+      while(parent != null){
+        offset += parent.getSize();
+        if(symbolTable.contains(this.id)) {
+          symbol = symbolTable.find(this.id);
+          offset += symbol.getOffset();
+          break;
+        }
+        else{
+          parent = parent.getParent();
+        }
+      }
+    }
+
+    code.append(String.format("# Loading value of %s from stack at offset %s\n", this.id, offset));
+    code.append(String.format("lw %s %s($sp)\n", register, offset));
 
     return MIPSResult.createRegisterResult(register, symbol.getType());
   }

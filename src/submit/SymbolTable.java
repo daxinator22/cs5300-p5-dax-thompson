@@ -36,7 +36,7 @@ public class SymbolTable {
       this.size += 4;
     }
 
-    symbol.setOffset(this.size);
+    symbol.setOffset(this.size * -1);
   }
 
   /**
@@ -82,6 +82,7 @@ public class SymbolTable {
   }
 
   public int getSize(){return size;}
+  public boolean contains(String id){return table.containsKey(id);}
 
   public SymbolTable getParent() {
     return parent;
