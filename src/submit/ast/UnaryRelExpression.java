@@ -30,8 +30,6 @@ public class UnaryRelExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        relExpr.toMIPS(code, data, symbolTable, regAllocator);
-
-        return MIPSResult.createVoidResult();
+        return relExpr.toMIPS(code, data, symbolTable, regAllocator);
     }
 }

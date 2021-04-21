@@ -45,8 +45,8 @@ public class Expression implements Node{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        expr.toMIPS(code, data, symbolTable, regAllocator);
 
-        return MIPSResult.createVoidResult();
+
+        return expr.toMIPS(code, data, symbolTable, regAllocator);
     }
 }

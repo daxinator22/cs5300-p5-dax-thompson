@@ -30,8 +30,6 @@ public class Immutable implements Node{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        part.toMIPS(code, data, symbolTable, regAllocator);
-
-        return MIPSResult.createVoidResult();
+        return part.toMIPS(code, data, symbolTable, regAllocator);
     }
 }

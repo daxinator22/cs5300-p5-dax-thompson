@@ -45,17 +45,23 @@ public class Call implements Node{
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
 
         if(this.id.equals("println")){
-            data.append("datalabel0: .asciiz ");
+            //Since this is a print, we know there is only one arg
+            MIPSResult result = exprs.get(0).toMIPS(code, data, symbolTable, regAllocator);
 
             code.append(String.format("# Adding print statement\n"));
             code.append("li $v0 4\n");
-            code.append("la $a0 datalabel0\n");
-            code.append("syscall\n");
 
-        }
+            //Setting params for syscall
+            if(result != null) {
+                if (result.getRegister() != null) {
+                    code.append(String.format("lw $a0 %s\n", result.getRegister()));
+                } else if (result.getAddress() != null) {
+                    code.append(String.format("la $a0 %s\n", result.getAddress()));
+                }
+            }
 
-        for(Node expr : exprs){
-            expr.toMIPS(code, data, symbolTable, regAllocator);
+            code.append("syscall\n\n");
+
         }
 
         return MIPSResult.createVoidResult();

@@ -34,10 +34,12 @@ public class AndExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        MIPSResult result = MIPSResult.createVoidResult();
+
         for(Node unary : unarys){
-            unary.toMIPS(code, data, symbolTable, regAllocator);
+            result = unary.toMIPS(code, data, symbolTable, regAllocator);
         }
 
-        return MIPSResult.createVoidResult();
+        return result;
     }
 }

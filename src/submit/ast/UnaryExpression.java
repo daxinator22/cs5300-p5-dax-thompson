@@ -29,8 +29,6 @@ public class UnaryExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        factor.toMIPS(code, data, symbolTable, regAllocator);
-
-        return MIPSResult.createVoidResult();
+        return factor.toMIPS(code, data, symbolTable, regAllocator);
     }
 }

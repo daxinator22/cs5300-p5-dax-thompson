@@ -33,10 +33,12 @@ public class SumExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        MIPSResult result = MIPSResult.createVoidResult();
+
         for(Node term : termExpr){
-            term.toMIPS(code, data, symbolTable, regAllocator);
+            result = term.toMIPS(code, data, symbolTable, regAllocator);
         }
 
-        return MIPSResult.createVoidResult();
+        return result;
     }
 }

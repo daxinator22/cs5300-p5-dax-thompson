@@ -45,8 +45,6 @@ public class Program implements Node {
       d.toMIPS(code, data, symbolTable, regAllocator);
     }
 
-    code.append("\n");
-
     code.append("# Exiting\n");
     code.append("li $v0 10\n");
     code.append("syscall");

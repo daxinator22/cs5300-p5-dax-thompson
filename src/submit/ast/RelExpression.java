@@ -39,10 +39,12 @@ public class RelExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        MIPSResult result = MIPSResult.createVoidResult();
+
         for(Node sum : sums){
-            sum.toMIPS(code, data, symbolTable, regAllocator);
+            result = sum.toMIPS(code, data, symbolTable, regAllocator);
         }
 
-        return MIPSResult.createVoidResult();
+        return result;
     }
 }
