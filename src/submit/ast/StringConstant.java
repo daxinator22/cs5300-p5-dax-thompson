@@ -28,7 +28,7 @@ public class StringConstant implements Node {
   public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
 
     data.append("datalabel0: .asciiz ");
-    data.append(String.format("%s", this.value));
+    data.append(String.format("%s\n", this.value));
 
     return MIPSResult.createAddressResult("datalabel0", VarType.CHAR);
   }

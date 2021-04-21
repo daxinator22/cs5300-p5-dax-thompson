@@ -51,6 +51,8 @@ public class Program implements Node {
 
     code.append("\n");
 
+    data.append("newline: .asciiz \"\\n\"\n");
+
     return MIPSResult.createVoidResult();
   }
 

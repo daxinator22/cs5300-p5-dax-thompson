@@ -45,6 +45,7 @@ public class Call implements Node{
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
 
         if(this.id.equals("println")){
+
             //Since this is a print, we know there is only one arg
             MIPSResult result = exprs.get(0).toMIPS(code, data, symbolTable, regAllocator);
 
@@ -67,10 +68,21 @@ public class Call implements Node{
                 }
             }
 
-            code.append("syscall\n\n");
+            code.append("syscall\n");
+
+            printNewLine(code);
 
         }
 
         return MIPSResult.createVoidResult();
+    }
+
+    private void printNewLine(StringBuilder code){
+        code.append("\n");
+        code.append("# Adding new line\n");
+        code.append("li $v0 4\n");
+        code.append("la $a0 newline\n");
+        code.append("syscall\n");
+        code.append("\n");
     }
 }
