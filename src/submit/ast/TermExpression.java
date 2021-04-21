@@ -4,6 +4,7 @@ import submit.MIPSResult;
 import submit.RegisterAllocator;
 import submit.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TermExpression extends Expression{
@@ -37,10 +38,24 @@ public class TermExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        MIPSResult result = MIPSResult.createVoidResult();
+        ArrayList<MIPSResult> registers = new ArrayList<>();
 
         for(Node unary : unarys){
-            result = unary.toMIPS(code, data, symbolTable, regAllocator);
+            registers.add(unary.toMIPS(code, data, symbolTable, regAllocator));
+        }
+
+        MIPSResult result = registers.get(0);
+        registers.remove(result);
+
+        for(String op : ops){
+            if(op.equals("*")){
+                code.append(String.format("mul %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                registers.remove(0);
+            }
+            else{
+                code.append(String.format("div %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                registers.remove(0);
+            }
         }
 
         return result;

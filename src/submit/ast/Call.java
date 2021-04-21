@@ -74,6 +74,8 @@ public class Call implements Node{
 
         }
 
+        regAllocator.clearAll();
+
         return MIPSResult.createVoidResult();
     }
 
