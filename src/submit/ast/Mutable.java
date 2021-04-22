@@ -50,8 +50,8 @@ public class Mutable implements Node {
       SymbolTable parent = symbolTable.getParent();
       while(parent != null){
         offset += parent.getSize();
-        if(symbolTable.contains(this.id)) {
-          symbol = symbolTable.find(this.id);
+        if(parent.contains(this.id)) {
+          symbol = parent.find(this.id);
           offset += symbol.getOffset();
           break;
         }

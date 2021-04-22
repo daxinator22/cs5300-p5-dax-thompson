@@ -2,6 +2,7 @@ package submit.ast;
 
 import submit.MIPSResult;
 import submit.RegisterAllocator;
+import submit.SymbolInfo;
 import submit.SymbolTable;
 
 public class Expression implements Node{
@@ -59,7 +60,24 @@ public class Expression implements Node{
         MIPSResult rightHand = expr.toMIPS(code, data, symbolTable, regAllocator);
 
         //Store right hand value to stack
-        int offset = symbolTable.find(mutable.getId()).getOffset();
+        int offset = 0;
+        if(symbolTable.contains(mutable.getId())) {
+            offset = symbolTable.find(mutable.getId()).getOffset();
+        }
+        else{
+            SymbolTable parent = symbolTable.getParent();
+            while(parent != null){
+                offset += parent.getSize();
+                if(parent.contains(mutable.getId())) {
+                    SymbolInfo symbol = parent.find(mutable.getId());
+                    offset += symbol.getOffset();
+                    break;
+                }
+                else{
+                    parent = parent.getParent();
+                }
+            }
+        }
         code.append(String.format("# Saving new value of %s to stack\n", mutable.getId()));
         if(operator.equals("=")) {
             code.append(String.format("sw %s %s($sp)\n", rightHand.getRegister(), offset));

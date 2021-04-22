@@ -29,6 +29,14 @@ public class UnaryExpression extends Expression{
 
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
-        return factor.toMIPS(code, data, symbolTable, regAllocator);
+        MIPSResult result = factor.toMIPS(code, data, symbolTable, regAllocator);
+
+        for(String op : ops){
+            if(op.equals("-")){
+                code.append("# Turning value negative\n");
+                code.append(String.format("mul %s %s -1", result.getRegister(), result.getRegister()));
+            }
+        }
+        return result;
     }
 }
