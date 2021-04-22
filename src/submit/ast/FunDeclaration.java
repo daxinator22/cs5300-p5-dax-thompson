@@ -58,6 +58,13 @@ public class FunDeclaration implements Declaration, Node {
 
         stmt.toMIPS(code, data, symbolTable, regAllocator);
 
+        //Main will always exit
+        if(!this.id.equals("main")){
+            code.append(String.format("# Returning to function\n"));
+            code.append(String.format("jr $ra\n"));
+            code.append("\n");
+        }
+
         return MIPSResult.createVoidResult();
     }
 }

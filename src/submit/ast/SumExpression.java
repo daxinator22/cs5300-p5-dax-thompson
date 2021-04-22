@@ -46,8 +46,11 @@ public class SumExpression extends Expression{
         for(String op : ops){
             if(op.equals("+")) {
                 code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
-                registers.remove(0);
             }
+            else{
+                code.append(String.format("sub %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+            }
+            registers.remove(0);
         }
 
 

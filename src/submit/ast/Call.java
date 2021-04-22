@@ -73,6 +73,11 @@ public class Call implements Node{
             printNewLine(code);
 
         }
+        else{
+            code.append(String.format("# Jumping to %s\n", this.id));
+            code.append(String.format("jal %s\n", this.id));
+            code.append("\n");
+        }
 
         regAllocator.clearAll();
 

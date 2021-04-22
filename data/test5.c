@@ -9,7 +9,7 @@ void fum() {
     b = 12;
     println(b-a+4);
 
-    foo();
+    //foo();
 }
 
 void main() {
