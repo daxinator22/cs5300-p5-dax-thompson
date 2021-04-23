@@ -128,7 +128,8 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public Node visitFunDeclaration(CminusParser.FunDeclarationContext ctx) {
-        symbolTable.addSymbol(ctx.ID().toString(), new SymbolInfo(ctx.ID().toString(), this.getFunType(ctx.typeSpecifier()), true));
+        VarType funType = this.getFunType(ctx.typeSpecifier());
+        symbolTable.addSymbol(ctx.ID().toString(), new SymbolInfo(ctx.ID().toString(), funType, true));
         SymbolTable child = symbolTable.createChild();
 
         //Finds the parameters
@@ -141,6 +142,9 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             //Creates new symbol table entry
             child.addSymbol(param.getId(), (new SymbolInfo(param.getId(), param.getType(), false)));
         }
+
+        //Creating return value slot
+        child.addSymbol("return", new SymbolInfo("return", funType, false));
 
         //Processing statements
         CompoundStatment statement = (CompoundStatment) visitCompoundStmt(ctx.statement().compoundStmt(), child);

@@ -114,6 +114,13 @@ public class Call implements Node{
             code.append(String.format("jal %s\n", this.id));
             code.append("\n");
 
+            //Loading return value
+            int returnOffset = offset - 4;
+            code.append(String.format("# Loading return value at offset %s\n", returnOffset));
+            String returnRegister = regAllocator.getT();
+            code.append(String.format("lw %s %s($sp)\n", returnRegister, returnOffset));
+            code.append("\n");
+
             //Adjusting stack pointer for scope storage
             code.append(String.format("# Adjusting stack pointer after method call\n"));
             code.append(String.format("# Moving %s bytes\n", symbolTable.getSize()));
@@ -126,6 +133,11 @@ public class Call implements Node{
             code.append(String.format("lw %s %s($sp)\n", register, returnAddress.getOffset()));
             code.append(String.format("move $ra %s\n", register));
             code.append("\n");
+
+            regAllocator.clearAll();
+
+            SymbolInfo function = symbolTable.find(this.id);
+            return MIPSResult.createRegisterResult(returnRegister, function.getType());
         }
 
         regAllocator.clearAll();
