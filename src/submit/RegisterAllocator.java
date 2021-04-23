@@ -19,6 +19,7 @@ public final class RegisterAllocator {
     private final boolean[] t = new boolean[10];
     private final boolean[] s = new boolean[8];
     private final Set<String> used = new HashSet<>();
+    private final boolean[] labels = new boolean[100];
 
     public RegisterAllocator() {
         clearAll();
@@ -90,6 +91,16 @@ public final class RegisterAllocator {
     public List<String> getUsed() {
         return new ArrayList<>(used);
     }
+
+    public String getUniqueLabel(){
+        for(int i = 0; i < this.labels.length; i ++){
+            if(!this.labels[i]){
+                return String.format("datalabel%s", i);
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Any time you call this method you should seriously consider adding a

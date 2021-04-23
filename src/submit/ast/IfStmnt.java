@@ -1,8 +1,12 @@
 package submit.ast;
 
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolTable;
+
 import java.util.List;
 
-public class IfStmnt extends AbstractNode implements Statement {
+public class IfStmnt implements Statement {
 
     private Expression simpleExpr;
     private Statement trueStmt;
@@ -41,5 +45,38 @@ public class IfStmnt extends AbstractNode implements Statement {
             }
         }
 
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+        //Get boolean value of statement
+        MIPSResult condition = simpleExpr.toMIPS(code, data, symbolTable, regAllocator);
+
+        //Adds if statement branch
+        //If the condition is not true, will jump to data label
+        String dataLabel = regAllocator.getUniqueLabel();
+        code.append(String.format("# Checking if condition\n"));
+        code.append(String.format("bne %s $zero %s\n", condition.getRegister(), dataLabel));
+        code.append("\n");
+
+        //True condition
+        code.append("# True statement\n");
+        trueStmt.toMIPS(code, data, symbolTable, regAllocator);
+
+        //Jumping to next code
+        String nextDataLabel = regAllocator.getUniqueLabel();
+        code.append("# Jumping to code after statement\n");
+        code.append(String.format("j %s", nextDataLabel));
+
+        //False condition
+        code.append("# False condition\n");
+        code.append(String.format("%s: \n", dataLabel));
+        code.append("\n");
+
+        //Continue on to next lines of code
+        code.append(String.format("%s: \n", nextDataLabel));
+        code.append("\n");
+
+        return MIPSResult.createVoidResult();
     }
 }

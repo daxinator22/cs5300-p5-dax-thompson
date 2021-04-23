@@ -30,7 +30,8 @@ public class StringConstant implements Node {
     data.append("datalabel0: .asciiz ");
     data.append(String.format("%s\n", this.value));
 
-    return MIPSResult.createAddressResult("datalabel0", VarType.CHAR);
+    String label = regAllocator.getUniqueLabel();
+    return MIPSResult.createAddressResult(label, VarType.CHAR);
   }
 
 }
