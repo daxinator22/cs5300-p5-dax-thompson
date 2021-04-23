@@ -2,6 +2,7 @@ package submit.ast;
 
 import submit.MIPSResult;
 import submit.RegisterAllocator;
+import submit.SymbolInfo;
 import submit.SymbolTable;
 
 import java.util.List;
@@ -74,8 +75,32 @@ public class Call implements Node{
 
         }
         else{
+            //Checks to see if return address is in symbol table
+            SymbolInfo returnAddress = null;
+
+            if(symbolTable.contains("$ra")){
+                returnAddress = symbolTable.find("$ra");
+            }
+            else {
+                returnAddress = new SymbolInfo("$ra", null, false);
+                symbolTable.addSymbol("$ra", returnAddress);
+            }
+
+            //Saves return address
+            String register = regAllocator.getT();
+            code.append(String.format("# Storing return address\n"));
+            code.append(String.format("move %s $ra\n", register));
+            code.append(String.format("sw %s %s($sp)\n", register, returnAddress.getOffset()));
+            code.append("\n");
+
             code.append(String.format("# Jumping to %s\n", this.id));
             code.append(String.format("jal %s\n", this.id));
+            code.append("\n");
+
+            //Loads return address
+            code.append(String.format("# Loading return address\n"));
+            code.append(String.format("lw %s %s($sp)\n", register, returnAddress.getOffset()));
+            code.append(String.format("move $ra %s\n", register));
             code.append("\n");
         }
 
