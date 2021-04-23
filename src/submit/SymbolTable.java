@@ -3,6 +3,7 @@ package submit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /*
  * Code formatter project
@@ -81,6 +82,7 @@ public class SymbolTable {
     return s.toString();
   }
 
+  public Set<String> getKeys(){return this.table.keySet();}
   public int getSize(){return size;}
   public boolean contains(String id){return table.containsKey(id);}
 

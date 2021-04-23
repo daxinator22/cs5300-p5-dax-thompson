@@ -1,6 +1,11 @@
 package submit.ast;
 
-public class Param extends AbstractNode implements Declaration{
+import submit.MIPSResult;
+import submit.RegisterAllocator;
+import submit.SymbolInfo;
+import submit.SymbolTable;
+
+public class Param implements Declaration, Node{
 
     private VarType type;
     private String id;
@@ -38,5 +43,15 @@ public class Param extends AbstractNode implements Declaration{
         }
 
         builder.append(String.format("%s %s%s", type.toString(), id, arrayFomrat));
+    }
+
+    @Override
+    public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+
+        SymbolInfo param = symbolTable.find(this.id);
+
+        code.append(String.format("# Loading value of %s from %s from $sp\n", this.id, param.getOffset()));
+
+        return MIPSResult.createVoidResult();
     }
 }

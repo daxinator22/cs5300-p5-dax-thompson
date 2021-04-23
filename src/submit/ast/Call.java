@@ -93,9 +93,33 @@ public class Call implements Node{
             code.append(String.format("sw %s %s($sp)\n", register, returnAddress.getOffset()));
             code.append("\n");
 
+            //Storing parameters
+            int offset = 0;
+            for(Expression expr : exprs){
+                offset -= 4;
+                MIPSResult result = expr.toMIPS(code, data, symbolTable, regAllocator);
+                code.append(String.format("# Storing value of first parameter at %s\n", offset));
+                code.append(String.format("sw %s %s($sp)\n", result.getRegister(), offset - symbolTable.getSize()));
+                code.append("\n");
+            }
+
+            //Adjusting stack pointer for scope storage
+            code.append(String.format("# Adjusting stack pointer before method call\n"));
+            code.append(String.format("# Moving %s bytes\n", symbolTable.getSize() * -1));
+            code.append(String.format("addi $sp $sp -%s\n", symbolTable.getSize()));
+            code.append("\n");
+
+            //Method call
             code.append(String.format("# Jumping to %s\n", this.id));
             code.append(String.format("jal %s\n", this.id));
             code.append("\n");
+
+            //Adjusting stack pointer for scope storage
+            code.append(String.format("# Adjusting stack pointer after method call\n"));
+            code.append(String.format("# Moving %s bytes\n", symbolTable.getSize()));
+            code.append(String.format("addi $sp $sp %s\n", symbolTable.getSize()));
+            code.append("\n");
+
 
             //Loads return address
             code.append(String.format("# Loading return address\n"));

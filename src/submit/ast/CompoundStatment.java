@@ -20,6 +20,8 @@ public class CompoundStatment implements Statement{
         this.symbolTable = symbolTable;
     }
 
+    public SymbolTable getSymbolTable(){return this.symbolTable;}
+
     @Override
     public void toCminus(StringBuilder builder, String prefix) {
 
@@ -39,6 +41,13 @@ public class CompoundStatment implements Statement{
     @Override
     public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
         code.append(String.format("# Symbol table is %s bytes\n", this.symbolTable.getSize()));
+
+        //Lists everything in the symbol table
+        for(String id : this.symbolTable.getKeys()){
+            SymbolInfo param = this.symbolTable.find(id);
+            code.append(String.format("#  %s at %s\n", param, param.getOffset()));
+        }
+        code.append("\n");
         code.append(String.format("# Entering new scope, adjusting stack pointer %s bytes\n", symbolTable.getSize()));
         code.append(String.format("addi $sp $sp -%s\n", symbolTable.getSize()));
 

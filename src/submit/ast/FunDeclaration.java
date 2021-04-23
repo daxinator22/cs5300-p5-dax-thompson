@@ -11,9 +11,9 @@ public class FunDeclaration implements Declaration, Node {
     private VarType type;
     private String id;
     private List<Param> params;
-    private Statement stmt;
+    private CompoundStatment stmt;
 
-    public FunDeclaration(VarType type, String id, List<Param> params, Statement stmt){
+    public FunDeclaration(VarType type, String id, List<Param> params, CompoundStatment stmt){
         this.type = type;
         this.id = id;
         this.params = params;
@@ -55,6 +55,10 @@ public class FunDeclaration implements Declaration, Node {
 
         code.append(String.format("# Creating function call for %s\n", this.id));
         code.append(String.format("%s:\n\n", this.id));
+
+        for(Param param : params){
+            param.toMIPS(code, data, stmt.getSymbolTable(), regAllocator);
+        }
 
         stmt.toMIPS(code, data, symbolTable, regAllocator);
 
