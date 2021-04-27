@@ -44,7 +44,10 @@ public class Return implements Statement {
     //Store return value on the stack
     code.append(String.format("# Storing return value to stack at %s offset\n", returnValue.getOffset()));
     code.append(String.format("sw %s %s($sp)\n", result.getRegister(), returnValue.getOffset()));
+    code.append(String.format("jr $ra\n"));
     code.append("\n");
+
+    regAllocator.clear(result.getRegister());
 
     return MIPSResult.createVoidResult();
   }

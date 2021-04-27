@@ -64,7 +64,7 @@ public class RelExpression extends Expression{
                 code.append(String.format("slt %s %s %s\n", compResultReg, result.getRegister(), compResult.getRegister()));
                 code.append(String.format("slt %s %s %s\n", compResultReg, compResult.getRegister(), result.getRegister()));
 
-                code.append(String.format("move %s %s", result.getRegister(), compResultReg));
+                code.append(String.format("move %s %s\n", result.getRegister(), compResultReg));
                 regAllocator.clear(compResultReg);
             }
             else if(op.equals("<=")){
