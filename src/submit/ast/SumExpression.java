@@ -50,14 +50,14 @@ public class SumExpression extends Expression{
             code.append(String.format("# Loading address result into register\n"));
             code.append(String.format("lw %s %s"));
 
-            MIPSResult.createRegisterResult()
+//            MIPSResult.createRegisterResult()
         }
 
         for(String op : ops){
             if(op.equals("+")) {
-                if(result.) {
+//                if(result.) {
                     code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
-                }
+//                }
             }
             else{
                 code.append(String.format("sub %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
