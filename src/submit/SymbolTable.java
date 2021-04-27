@@ -1,5 +1,7 @@
 package submit;
 
+import submit.ast.VarType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +20,7 @@ public class SymbolTable {
   private SymbolTable parent;
   private final List<SymbolTable> children;
   private int size;
+  private int methodCalls;
 
   public SymbolTable() {
     table = new HashMap<>();
@@ -67,6 +70,13 @@ public class SymbolTable {
     children.add(child);
     child.parent = this;
     return child;
+  }
+
+  public int addNewMethodCall(VarType type){
+    String id = String.format("methodCall%s", methodCalls);
+    this.addSymbol(id, new SymbolInfo(id, type, false));
+
+    return methodCalls++;
   }
 
   public String toString(){

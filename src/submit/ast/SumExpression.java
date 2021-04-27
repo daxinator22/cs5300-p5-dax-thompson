@@ -43,9 +43,21 @@ public class SumExpression extends Expression{
         MIPSResult result = registers.get(0);
         registers.remove(0);
 
+        if(result.getRegister() == null){
+            String reg = regAllocator.getT();
+
+            //Loading address result into register
+            code.append(String.format("# Loading address result into register\n"));
+            code.append(String.format("lw %s %s"));
+
+            MIPSResult.createRegisterResult()
+        }
+
         for(String op : ops){
             if(op.equals("+")) {
-                code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                if(result.) {
+                    code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                }
             }
             else{
                 code.append(String.format("sub %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));

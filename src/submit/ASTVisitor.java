@@ -532,8 +532,13 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
      */
     @Override public Node visitCall(CminusParser.CallContext ctx) {
         String id = ctx.ID().toString();
-        if(this.symbolTable.find(id) == null){
+        SymbolInfo function = this.symbolTable.find(id);
+        int methodCallNumber = -1;
+        if(function == null){
             LOGGER.fine("Undefined symbol on line " + ctx.getStart().getLine() + ": " + id);
+        }
+        else {
+            methodCallNumber = this.symbolTable.addNewMethodCall(function.getType());
         }
 
         ArrayList<Expression> exprs = new ArrayList<>();
@@ -542,7 +547,7 @@ public class ASTVisitor extends CminusBaseVisitor<Node> {
             exprs.add((Expression) visitExpression(e));
         }
 
-        return new Call(id, exprs);
+        return new Call(id, exprs, methodCallNumber);
     }
 
 }

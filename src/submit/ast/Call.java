@@ -9,12 +9,14 @@ import java.util.List;
 
 public class Call implements Node{
 
+    private int methodCallNumber;
     private String id;
     private List<Expression> exprs;
 
-    public Call(String id, List<Expression> exprs){
+    public Call(String id, List<Expression> exprs, int methodCallNumber){
         this.id = id;
         this.exprs = exprs;
+        this.methodCallNumber = methodCallNumber;
     }
 
     @Override
@@ -127,6 +129,11 @@ public class Call implements Node{
             code.append(String.format("addi $sp $sp %s\n", symbolTable.getSize()));
             code.append("\n");
 
+            //Storing call value
+            SymbolInfo methodCall = symbolTable.find(String.format("methodCall%s", methodCallNumber));
+            code.append(String.format("# Storing value for methodCall %s\n", this.methodCallNumber));
+            code.append(String.format("sw %s %s($sp)\n", returnRegister, methodCall.getOffset()));
+            code.append("\n");
 
             //Loads return address
             code.append(String.format("# Loading return address\n"));
@@ -137,7 +144,7 @@ public class Call implements Node{
             regAllocator.clearAll();
 
             SymbolInfo function = symbolTable.find(this.id);
-            return MIPSResult.createRegisterResult(returnRegister, function.getType());
+            return MIPSResult.createAddressResult(String.format("%s($sp)", methodCall.getOffset()), function.getType());
         }
 
         regAllocator.clearAll();
