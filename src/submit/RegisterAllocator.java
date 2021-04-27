@@ -93,11 +93,13 @@ public final class RegisterAllocator {
     }
 
     public String getUniqueLabel(){
-        for(int i = 0; i < this.labels.length; i ++){
+        for(int i = 0; i < this.labels.length; i++){
             if(!this.labels[i]){
+                this.labels[i] = true;
                 return String.format("datalabel%s", i);
             }
         }
+
         return null;
     }
 

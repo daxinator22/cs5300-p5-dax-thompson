@@ -66,11 +66,14 @@ public class IfStmnt implements Statement {
         //Jumping to next code
         String nextDataLabel = regAllocator.getUniqueLabel();
         code.append("# Jumping to code after statement\n");
-        code.append(String.format("j %s", nextDataLabel));
+        code.append(String.format("j %s\n", nextDataLabel));
 
         //False condition
         code.append("# False condition\n");
         code.append(String.format("%s: \n", dataLabel));
+        if(falseStmt != null) {
+            falseStmt.toMIPS(code, data, symbolTable, regAllocator);
+        }
         code.append("\n");
 
         //Continue on to next lines of code

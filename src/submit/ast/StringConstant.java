@@ -26,12 +26,12 @@ public class StringConstant implements Node {
 
   @Override
   public MIPSResult toMIPS(StringBuilder code, StringBuilder data, SymbolTable symbolTable, RegisterAllocator regAllocator) {
+    String uniqueLabel = regAllocator.getUniqueLabel();
 
-    data.append("datalabel0: .asciiz ");
+    data.append(String.format("%s: .asciiz ", uniqueLabel));
     data.append(String.format("%s\n", this.value));
 
-    String label = regAllocator.getUniqueLabel();
-    return MIPSResult.createAddressResult(label, VarType.CHAR);
+    return MIPSResult.createAddressResult(uniqueLabel, VarType.CHAR);
   }
 
 }
