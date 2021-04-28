@@ -57,6 +57,7 @@ public class RelExpression extends Expression{
                 code.append(String.format("slt %s %s %s\n", result.getRegister(), result.getRegister(), compResult.getRegister()));
             }
             else if(op.equals("<")){
+                code.append(String.format("addi %s %s 1\n", result.getRegister(), result.getRegister()));
                 code.append(String.format("slt %s %s %s\n", result.getRegister(), compResult.getRegister(), result.getRegister()));
             }
             else if(op.equals("==")){
