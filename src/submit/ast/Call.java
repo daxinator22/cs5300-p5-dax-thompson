@@ -64,7 +64,6 @@ public class Call implements Node{
             //Setting params for syscall
             if(result != null) {
                 if (result.getRegister() != null) {
-
                     code.append(String.format("move $a0 %s\n", result.getRegister()));
                 } else if (result.getAddress() != null) {
                     code.append(String.format("la $a0 %s\n", result.getAddress()));

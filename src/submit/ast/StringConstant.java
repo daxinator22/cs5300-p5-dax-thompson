@@ -31,7 +31,12 @@ public class StringConstant implements Node {
     data.append(String.format("%s: .asciiz ", uniqueLabel));
     data.append(String.format("%s\n", this.value));
 
-    return MIPSResult.createAddressResult(uniqueLabel, VarType.CHAR);
+    String register = regAllocator.getT();
+    code.append(String.format("# Loading string into register\n"));
+    code.append(String.format("la %s %s\n", register, uniqueLabel));
+    code.append("\n");
+
+    return MIPSResult.createRegisterResult(register, VarType.CHAR);
   }
 
 }

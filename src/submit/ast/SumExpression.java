@@ -43,29 +43,39 @@ public class SumExpression extends Expression{
         MIPSResult result = registers.get(0);
         registers.remove(0);
 
-        if(result.getRegister() == null){
-            String reg = regAllocator.getT();
-
-            //Loading address result into register
-            code.append(String.format("# Loading address result into register\n"));
-            code.append(String.format("lw %s %s"));
-
-//            MIPSResult.createRegisterResult()
+        if(result.getRegister() == null && result.getAddress() != null){
+            result = loadFromAddress(code, regAllocator, result);
         }
 
         for(String op : ops){
+            String command = "";
             if(op.equals("+")) {
-//                if(result.) {
-                    code.append(String.format("add %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
-//                }
+                command = "add";
             }
             else{
-                code.append(String.format("sub %s %s %s\n", result.getRegister(), result.getRegister(), registers.get(0).getRegister()));
+                command = "sub";
             }
+
+            MIPSResult compResult = registers.get(0);
+            if(compResult.getRegister() == null && compResult.getAddress() != null) {
+                compResult = loadFromAddress(code, regAllocator, compResult);
+            }
+
+            code.append(String.format("%s %s %s %s\n", command, result.getRegister(), result.getRegister(), compResult.getRegister()));
             registers.remove(0);
         }
 
 
         return result;
+    }
+
+    private MIPSResult loadFromAddress(StringBuilder code, RegisterAllocator regAllocator, MIPSResult compResult){
+        String reg = regAllocator.getT();
+        code.append(String.format("# Loading result into %s\n", reg));
+        code.append(String.format("lw %s %s\n", reg, compResult.getAddress()));
+
+        compResult = MIPSResult.createRegisterResult(reg, compResult.getType());
+
+        return compResult;
     }
 }
